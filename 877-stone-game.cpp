@@ -30,6 +30,6 @@ public:
         }
         vector<vector<int>> dp(n + 1, vector<int>(n + 1, -1));
         int alice_score = f(0, n - 1, piles, n, dp);
-        return alice_score > total_stones / 2;
+        return alice_score >= total_stones / 2;
     }
 };
