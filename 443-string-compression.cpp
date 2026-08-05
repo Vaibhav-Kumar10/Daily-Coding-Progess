@@ -1,6 +1,36 @@
 class Solution {
 public:
     int compress(vector<char>& chars) {
+        int n = chars.size(), idx = 0, cnt = 1;
+        for (int i = 1; i < n; i++) {
+            if (chars[i] == chars[i - 1]) {
+                cnt++;
+            } else {
+                chars[idx] = chars[i - 1];
+                idx++;
+                if (cnt != 1) {
+                    string cnt_s = to_string(cnt);
+                    for (char cnt_c : cnt_s) {
+                        chars[idx] = cnt_c;
+                        idx++;
+                    }
+                }
+                cnt = 1;
+            }
+        }
+        chars[idx] = chars[n - 1];
+        idx++;
+        if (cnt != 1) {
+            string cnt_s = to_string(cnt);
+            for (char cnt_c : cnt_s) {
+                chars[idx] = cnt_c;
+                idx++;
+            }
+        }
+        return idx;
+    }
+    /*
+    int compress(vector<char>& chars) {
         vector<char> ans;
         int n = chars.size(), cnt = 1;
         for (int i = 1; i < n; i++) {
@@ -29,4 +59,5 @@ public:
         }
         return ans.size();
     }
+    */
 };
