@@ -6,7 +6,7 @@ public:
         for (r; r < n; r++) {
             cur_sum += nums[r];
             long long score = cur_sum * (r - l + 1);
-            while (score >= k) {
+            while (l <= r && score >= k) {
                 cur_sum -= nums[l];
                 l++;
                 score = cur_sum * (r - l + 1);
