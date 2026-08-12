@@ -5,7 +5,7 @@ public:
         unordered_map<int, int> freq;
         while (r < n) {
             freq[nums[r]]++;
-            while (freq[nums[r]] > k) {
+            while (l < r && freq[nums[r]] > k) {
                 freq[nums[l]]--;
                 l++;
             }
