@@ -19,8 +19,8 @@ public:
                 int ans = INT_MAX;
                 for (int i = left; i < right; i++) {
                     int maxLeafProd = maxBw[{left, i}] * maxBw[{i + 1, right}];
-                    int lst = dp[i + 1][right];
-                    int rst = dp[left][i];
+                    int rst = dp[i + 1][right];
+                    int lst = dp[left][i];
                     ans = min(ans, maxLeafProd + lst + rst);
                 }
                 dp[left][right] = ans;
@@ -40,8 +40,8 @@ public:
         int ans = INT_MAX;
         for (int i = left; i < right; i++) {
             int maxLeafProd = maxBw[{left, i}] * maxBw[{i + 1, right}];
-            int lst = f(i + 1, right, arr, maxBw, dp);
-            int rst = f(left, i, arr, maxBw, dp);
+            int rst = f(i + 1, right, arr, maxBw, dp);
+            int lst = f(left, i, arr, maxBw, dp);
             ans = min(ans, maxLeafProd + lst + rst);
         }
         return dp[left][right] = ans;
