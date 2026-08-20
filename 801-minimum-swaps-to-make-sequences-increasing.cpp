@@ -1,5 +1,31 @@
 class Solution {
 public:
+    int minSwap(vector<int>& nums1, vector<int>& nums2) {
+        nums1.insert(nums1.begin(), -1);
+        nums2.insert(nums2.begin(), -1);
+        int n = nums1.size();
+        vector<vector<int>> dp(n + 1, vector<int>(2, 0));
+        for (int ind = n - 1; ind > 0; ind--) {
+            for (int swapped = 0; swapped <= 1; swapped++) {
+                int prev1 = nums1[ind - 1], prev2 = nums2[ind - 1];
+                if (swapped) {
+                    swap(prev1, prev2);
+                }
+                int ans = INT_MAX;
+                // Strictly increasing in both => No swap required
+                if (nums1[ind] > prev1 && nums2[ind] > prev2) {
+                    ans = min(ans, dp[ind + 1][false]);
+                }
+                // Not strictly increasing in both => Swap required
+                if (nums1[ind] > prev2 && nums2[ind] > prev1) {
+                    ans = min(ans, 1 + dp[ind + 1][true]);
+                }
+                dp[ind][swapped] = ans;
+            }
+        }
+        return dp[1][0];
+    }
+    /*
     int dp[100005][2];
     int f(int ind, bool swapped, vector<int>& nums1, vector<int>& nums2,
           int n) {
@@ -32,6 +58,7 @@ public:
         bool swapped = false;
         return f(ind, swapped, nums1, nums2, n + 1);
     }
+    */
     /*
     int f(int prev1, int prev2, int ind, vector<int>& nums1, vector<int>& nums2,
           int n) {
