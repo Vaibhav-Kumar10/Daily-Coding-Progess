@@ -3,6 +3,38 @@ public:
     int minSwap(vector<int>& nums1, vector<int>& nums2) {
         nums1.insert(nums1.begin(), -1);
         nums2.insert(nums2.begin(), -1);
+        int n = nums1.size(), next_swapped = 0, next_not_swapped = 0;
+        for (int ind = n - 1; ind > 0; ind--) {
+            int cur_swapped = 0, cur_not_swapped = 0;
+            for (int swapped = 0; swapped <= 1; swapped++) {
+                int prev1 = nums1[ind - 1], prev2 = nums2[ind - 1];
+                if (swapped) {
+                    swap(prev1, prev2);
+                }
+                int ans = INT_MAX;
+                // Strictly increasing in both => No swap required
+                if (nums1[ind] > prev1 && nums2[ind] > prev2) {
+                    ans = min(ans, next_not_swapped);
+                }
+                // Not strictly increasing in both => Swap required
+                if (nums1[ind] > prev2 && nums2[ind] > prev1) {
+                    ans = min(ans, 1 + next_swapped);
+                }
+                if (swapped) {
+                    cur_swapped = ans;
+                } else {
+                    cur_not_swapped = ans;
+                }
+            }
+            next_swapped = cur_swapped;
+            next_not_swapped = cur_not_swapped;
+        }
+        return next_not_swapped;
+    }
+    /*
+    int minSwap(vector<int>& nums1, vector<int>& nums2) {
+        nums1.insert(nums1.begin(), -1);
+        nums2.insert(nums2.begin(), -1);
         int n = nums1.size();
         vector<vector<int>> dp(n + 1, vector<int>(2, 0));
         for (int ind = n - 1; ind > 0; ind--) {
@@ -25,6 +57,7 @@ public:
         }
         return dp[1][0];
     }
+    */
     /*
     int dp[100005][2];
     int f(int ind, bool swapped, vector<int>& nums1, vector<int>& nums2,
