@@ -1,82 +1,44 @@
 class Solution {
 public:
-    long long findKthSmallest(vector<int>& coins, int k) {
-        sort(coins.begin(), coins.end());
-
-        vector<long long> useful;
-
-        for (int coin : coins) {
-            bool redundant = false;
-
-            for (long long prev : useful) {
-                if (coin % prev == 0) {
-                    redundant = true;
-                    break;
-                }
-            }
-
-            if (!redundant) {
-                useful.push_back(coin);
-            }
-        }
-
-        long long high = useful[0] * 1LL * k;
-        long long low = 1;
-
-        int m = useful.size();
-        int totalMasks = 1 << m;
-
-        vector<long long> lcms(totalMasks, 1);
-
-        vector<int> signs(totalMasks, 1);
-
-        for (int mask = 1; mask < totalMasks; ++mask) {
-            long long currentLCM = 1;
-            int bits = 0;
-
-            for (int i = 0; i < m; ++i) {
-                if (mask & (1 << i)) {
-                    long long g = std::gcd(currentLCM, useful[i]);
-
-                    currentLCM = currentLCM / g;
-
-                    if (currentLCM > high / useful[i]) {
-                        currentLCM = high + 1;
-                        break;
+    long long cntSmallerOnLeft_GTE_k(long long num, vector<int>& coins, int k) {
+        int n = coins.size();
+        long long cnt = 0;
+        for (int exprsn = 1; exprsn < (1 << n); exprsn++) {
+            long long lcm = 0, order = 0;
+            for (int i = 0; i < n; i++) {
+                // ith bit set => ith coin taken
+                if (exprsn & (1 << i)) {
+                    order++;
+                    if (lcm == 0) {
+                        lcm = coins[i];
+                    } else {
+                        lcm = (lcm * coins[i]) / (gcd(lcm, coins[i]));
                     }
-
-                    currentLCM *= useful[i];
-                    ++bits;
                 }
             }
-
-            lcms[mask] = currentLCM;
-
-            signs[mask] = (bits % 2 == 1) ? 1 : -1;
-        }
-
-        auto count = [&](long long x) {
-            long long result = 0;
-
-            for (int mask = 1; mask < totalMasks; ++mask) {
-                if (lcms[mask] <= x) {
-                    result += signs[mask] * (x / lcms[mask]);
-                }
-            }
-
-            return result;
-        };
-
-        while (low < high) {
-            long long mid = low + (high - low) / 2;
-
-            if (count(mid) >= k) {
-                high = mid;
+            if (order % 2 == 0) {
+                cnt -= floor(num / lcm);
             } else {
-                low = mid + 1;
+                cnt += floor(num / lcm);
             }
         }
-
-        return low;
+        return cnt >= k;
+    }
+    long long findKthSmallest(vector<int>& coins, int k) {
+        long long low = 0;
+        long long high = 1LL * (*max_element(coins.begin(), coins.end())) * k;
+        while (low + 1 < high) {
+            long long mid = low + (high - low) / 2;
+            // Left has >= k smaller no.
+            // try smaller num
+            if (cntSmallerOnLeft_GTE_k(mid, coins, k)) {
+                high = mid;
+            }
+            // try larger num
+            else {
+                low = mid;
+            }
+        }
+        return high;
     }
 };
