@@ -5,6 +5,22 @@ public:
             return false;
         }
         int divisor_sum = 0;
+        for (int divisor = 1; divisor * divisor <= num; divisor++) {
+            if (num % divisor == 0) {
+                divisor_sum += divisor;
+                if (divisor * divisor != num) {
+                    divisor_sum += num / divisor;
+                }
+            }
+        }
+        return divisor_sum - num == num;
+    }
+    /*
+    bool checkPerfectNumber(int num) {
+        if (num <= 0) {
+            return false;
+        }
+        int divisor_sum = 0;
         for (int divisor = 1; divisor < num; divisor++) {
             if (num % divisor == 0) {
                 divisor_sum += divisor;
@@ -15,4 +31,5 @@ public:
         }
         return divisor_sum == num;
     }
+    */
 };
