@@ -26,8 +26,7 @@ public:
         }
         if (right_child != NULL) {
             if (left_child == NULL) {
-                ans += '(';
-                ans += ')';
+                ans += "()";
             }
             ans += '(';
             preorder(right_child, ans);
