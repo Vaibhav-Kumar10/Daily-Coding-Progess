@@ -68,6 +68,7 @@ public:
         }
         return MST_wt;
     }
+
     vector<vector<int>>
     findCriticalAndPseudoCriticalEdges(int n, vector<vector<int>>& edges) {
         // 1. Store the edges along with their respective index
@@ -82,7 +83,6 @@ public:
         // 2. Using Kruskal's Algorithm find MST
         // Sort acc. to weights
         int MST_wt = findMSTusingKruskal(n, indexed_edges);
-        cout << MST_wt;
 
         // 3. Check for each edge id it is Crtical or Pseudo Critical.
         vector<vector<int>> ans_edges = {{}, {}};
