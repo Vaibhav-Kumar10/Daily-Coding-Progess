@@ -1,40 +1,44 @@
 class Solution {
 public:
-    string lexGreaterPermutation(string s, string target) {
-        vector<int> cnt(26);
-        for (int i = 0; i < s.size(); i++) {
-            cnt[s[i] - 'a']++;
-            cnt[target[i] - 'a']--;
+    int freq[26];
+    string ans;
+    bool f(int ind, string& cur, string& s, string& target, int n,
+           bool greater) {
+        if (ind == n) {
+            if (greater) {
+                ans = cur;
+                return true;
+            }
+            return false;
         }
-
-        // Try from right to left
-        for (int i = s.size() - 1; i >= 0; i--) {
-            int b = target[i] - 'a';
-            cnt[b]++;  // Reversal of consumption
-                       // Check if the prefix can fully match
-            if (*min_element(cnt.begin(), cnt.end()) < 0) {
+        for (char ch = 'a'; ch <= 'z'; ch++) {
+            if (freq[ch - 'a'] == 0) {
                 continue;
             }
-            // Find the smallest available character larger than b.
-            for (int j = b + 1; j < 26; j++) {
-                if (cnt[j]) {
-                    cnt[j]--;
-                    target[i] = 'a' + j;
-                    target.resize(i + 1);
-                    return target + getMinString(cnt);
-                }
+            if (!greater && ch < target[ind]) {
+                continue;
             }
+            cur += ch;
+            freq[ch - 'a']--;
+            bool isGreater = greater || cur > target;
+            if (f(ind + 1, cur, s, target, n, isGreater) == true) {
+                return true;
+            }
+            cur.pop_back();
+            freq[ch - 'a']++;
         }
-
-        return "";
+        return false;
     }
-
-    // Get the lexicographically smallest string (in ascending order)
-    string getMinString(const vector<int>& cnt) {
-        string res;
-        for (int i = 0; i < 26; i++) {
-            res.append(cnt[i], 'a' + i);
+    string lexGreaterPermutation(string s, string target) {
+        for (char ch : s) {
+            freq[ch - 'a']++;
+            cout << freq[ch - 'a'];
         }
-        return res;
+        ans = "";
+        bool greater = 0;
+        int n = s.size(), ind = 0;
+        string cur = "";
+        f(ind, cur, s, target, n, greater);
+        return ans;
     }
 };
