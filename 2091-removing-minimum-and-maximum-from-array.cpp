@@ -17,13 +17,16 @@ public:
         int max_l2r = max_idx + 1, max_r2l = n - max_idx;
 
         int rem_all_from_l = max(max_l2r, min_l2r);
+
         int rem_all_from_r = max(max_r2l, min_r2l);
 
         int rem_alg_alg = min(min_l2r, min_r2l) + min(max_l2r, max_r2l);
 
         cout << min_l2r << " " << min_r2l << " " << min_idx << endl;
         cout << max_l2r << " " << max_r2l << " " << max_idx << endl;
-        cout << rem_all_from_l << " " << rem_all_from_r << " "  << rem_alg_alg << endl;
+        cout << rem_all_from_l << " " << rem_all_from_r << " " << rem_alg_alg
+             << endl;
+
         return min({rem_all_from_l, rem_all_from_r, rem_alg_alg});
     }
 };
