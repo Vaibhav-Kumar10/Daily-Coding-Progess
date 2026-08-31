@@ -12,6 +12,13 @@ public:
         grp_no[arr[0]] = grp;
         grp_els[grp].push(arr[0]);
         for (int i = 1; i < n; i++) {
+            if (arr[i] - arr[i - 1] > limit) {
+                grp++;
+            }
+            grp_els[grp].push(arr[i]);
+            grp_no[arr[i]] = grp;
+
+            /*
             if (arr[i] - arr[i - 1] <= limit) {
                 grp_els[grp].push(arr[i]);
                 grp_no[arr[i]] = grp;
@@ -20,6 +27,7 @@ public:
                 grp_els[grp].push(arr[i]);
                 grp_no[arr[i]] = grp;
             }
+            */
         }
 
         for (int i = 0; i < n; i++) {
