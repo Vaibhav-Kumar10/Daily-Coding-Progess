@@ -11,35 +11,34 @@
 class Solution {
 public:
     vector<int> nodesBetweenCriticalPoints(ListNode* head) {
-        vector<int> ans(2,INT_MAX); // To store the positions of critical points
-        int firstCP = -1, lastCP = -1, curPos = 0;
-
-        ListNode *prevNode = head, *curNode = head->next;
-        ListNode* nextNode = curNode->next;
-
-        while (nextNode) {
-            // Check if current node is a local maxima or minima
-            if ((prevNode->val > curNode->val &&
-                 curNode->val < nextNode->val) ||
-                (prevNode->val < curNode->val &&
-                 curNode->val > nextNode->val)) {
-                if (firstCP == -1) {
-                    firstCP = curPos;
-                    lastCP = curPos;
+        vector<int> ans = {INT_MAX, INT_MIN};
+        ListNode *prev_node = head, *cur_node = head->next;
+        ListNode* next_node = cur_node->next;
+        int first_critical_point = -1, last_critical_point = -1, cur_pos = 0;
+        while (next_node != NULL) {
+            if ((cur_node->val > prev_node->val &&
+                 cur_node->val > next_node->val) ||
+                (cur_node->val < prev_node->val &&
+                 cur_node->val < next_node->val)) {
+                if (first_critical_point == -1) {
+                    first_critical_point = cur_pos;
+                    last_critical_point = cur_pos;
                 } else {
-                    ans[0] = min(ans[0], curPos - lastCP);
-                    ans[1] = curPos - firstCP;
-                    lastCP = curPos;
+                    int min_dist = cur_pos - last_critical_point;
+                    int max_dist = cur_pos - first_critical_point;
+                    ans[0] = min(ans[0], min_dist);
+                    ans[1] = max(ans[1], max_dist);
+                    last_critical_point = cur_pos;
                 }
             }
-            curPos++;
-            nextNode = nextNode->next;
-            curNode = curNode->next;
-            prevNode = prevNode->next;
+            cur_pos++;
+            next_node = next_node->next;
+            cur_node = cur_node->next;
+            prev_node = prev_node->next;
         }
-        if (ans[0] == INT_MAX)
-            ans[0] = ans[1] = -1;
-
+        if (ans[0] == INT_MAX) {
+            return {-1, -1};
+        }
         return ans;
     }
 };
