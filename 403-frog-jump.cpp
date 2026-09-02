@@ -1,5 +1,42 @@
 class Solution {
 public:
+    vector<vector<int>> dp;
+    bool f(int ind, int k, vector<int>& stones,
+           unordered_map<int, int>& stone_idx, int n) {
+        if (ind == n - 1) {
+            return true;
+        }
+        if (dp[ind][k] != -1) {
+            return dp[ind][k];
+        }
+        bool can_cross = false;
+        for (int next_k = k - 1; next_k <= k + 1; next_k++) {
+            if (next_k <= 0) {
+                continue;
+            }
+            int next_stone = stones[ind] + next_k;
+            if (stone_idx.find(next_stone) != stone_idx.end()) {
+                int next_stone_idx = stone_idx[next_stone];
+                can_cross = can_cross ||
+                            f(next_stone_idx, next_k, stones, stone_idx, n);
+            }
+        }
+        return dp[ind][k] = can_cross;
+    }
+    bool canCross(vector<int>& stones) {
+        int n = stones.size();
+        if (stones[1] != 1) {
+            return false;
+        }
+        unordered_map<int, int> stone_idx;
+        for (int i = 0; i < n; i++) {
+            stone_idx[stones[i]] = i;
+        }
+        int k = 0, ind = 0;
+        dp.resize(n + 1, vector<int>(n + 1, -1));
+        return f(ind, k, stones, stone_idx, n);
+    }
+    /*
     bool f(int cur_stone, int k, vector<int>& stones,
            unordered_map<int, int>& stone_idx, int n,
            map<pair<int, int>, bool>& dp) {
@@ -37,4 +74,5 @@ public:
         int k = 1, cur_stone = stones[0] + 1;
         return f(cur_stone, k, stones, stone_idx, n, dp);
     }
+    */
 };
