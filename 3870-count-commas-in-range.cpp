@@ -4,10 +4,13 @@ public:
         if (n < 1000) {
             return 0;
         }
+        return n - 1000 + 1;
+        /*
         int comma = 0;
         for (int i = 1000; i <= n; i++) {
             comma++;
         }
         return comma;
+        */
     }
 };
