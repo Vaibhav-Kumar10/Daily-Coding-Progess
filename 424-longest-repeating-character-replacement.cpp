@@ -6,6 +6,23 @@ public:
         for (r; r < n; r++) {
             freq[s[r] - 'A']++;
             max_freq = max(max_freq, freq[s[r] - 'A']);
+            if ((r - l + 1 - max_freq) > k) {
+                freq[s[l] - 'A']--;
+                l++;
+            }
+            if ((r - l + 1 - max_freq) <= k) {
+                max_len = max(max_len, r - l + 1);
+            }
+        }
+        return max_len;
+    }
+    /*
+    int characterReplacement(string s, int k) {
+        int n = s.size(), max_len = -1, max_freq = -1, l = 0, r = 0;
+        vector<int> freq(26, 0);
+        for (r; r < n; r++) {
+            freq[s[r] - 'A']++;
+            max_freq = max(max_freq, freq[s[r] - 'A']);
             while (l <= r && ((r - l + 1 - max_freq) > k)) {
                 freq[s[l] - 'A']--;
                 max_freq = *max_element(freq.begin(), freq.end());
@@ -15,6 +32,7 @@ public:
         }
         return max_len;
     }
+    */
     /*
     int characterReplacement(string s, int k) {
         int n = s.size(), max_len = -1;
