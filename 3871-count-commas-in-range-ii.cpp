@@ -4,6 +4,18 @@ public:
         if (n < 1000) {
             return 0;
         }
+        long long start = 1000, comma_count = 0;
+        while (start <= n) {
+            comma_count += n - start + 1;
+            start *= 1000;
+        }
+        return comma_count;
+    }
+    /*
+    long long countCommas(long long n) {
+        if (n < 1000) {
+            return 0;
+        }
         long long lower = 1000, comma_range = 1, comma_count = 0;
         while (lower <= n) {
             long long upper = lower * 1000 - 1;
@@ -17,4 +29,5 @@ public:
         }
         return comma_count;
     }
+    */
 };
