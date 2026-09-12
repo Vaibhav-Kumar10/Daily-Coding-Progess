@@ -2,6 +2,41 @@ class Solution {
 public:
     int totalNumbers(vector<int>& digits) {
         int n = digits.size();
+        vector<int> freq(10, 0);
+        for (int digit : digits) {
+            freq[digit]++;
+        }
+        unordered_set<int> numbers;
+        for (int hundreds = 0; hundreds < 10; hundreds++) {
+            if (freq[hundreds] == 0) {
+                continue;
+            }
+            freq[hundreds]--;
+            for (int tens = 0; tens < 10; tens++) {
+                if (freq[tens] == 0) {
+                    continue;
+                }
+                freq[tens]--;
+                for (int ones = 0; ones < 10; ones++) {
+                    if (freq[ones] == 0) {
+                        continue;
+                    }
+                    freq[ones]--;
+                    int num = hundreds * 100 + tens * 10 + ones;
+                    if (num >= 100 && num % 2 == 0) {
+                        numbers.insert(num);
+                    }
+                    freq[ones]++;
+                }
+                freq[tens]++;
+            }
+            freq[hundreds]++;
+        }
+        return numbers.size();
+    }
+    /*
+    int totalNumbers(vector<int>& digits) {
+        int n = digits.size();
         unordered_set<int> numbers;
         for (int hundreds = 0; hundreds < n; hundreds++) {
             for (int tens = 0; tens < n; tens++) {
@@ -18,8 +53,8 @@ public:
             }
         }
         return numbers.size();
-        ;
     }
+    */
     /*
     void f(string cur, vector<int>& digits, set<int>& numbers, int n,
            vector<bool>& visited) {
