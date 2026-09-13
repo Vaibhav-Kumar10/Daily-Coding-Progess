@@ -15,32 +15,29 @@ public:
         int ans = 0;
 
         // Vertical translation
-        for (int dr = -(n - 1); dr <= n - 1; dr++) {
+        for (int row_offset = -n + 1; row_offset <= n - 1; row_offset++) {
             // Horizontal translation
-            for (int dc = -(n - 1); dc <= n - 1; dc++) {
+            for (int col_offset = -n + 1; col_offset <= n - 1; col_offset++) {
                 int overlap = 0;
-                for (int i = 0; i < n; i++) {
-                    int j = i + dr;
-
-                    if (j < 0 || j >= n) {
+                for (int row = 0; row < n; row++) {
+                    int nr = row + row_offset;
+                    if (nr < 0 || nr >= n) {
                         continue;
                     }
+                    int shifted = image1_mask[row];
 
-                    int shifted = image1_mask[i];
-
-                    if (dc > 0) {
-                        shifted <<= dc;
+                    if (col_offset > 0) {
+                        shifted <<= col_offset;
                     } else {
-                        shifted >>= -dc;
+                        shifted >>= -col_offset;
                     }
 
-                    overlap += __builtin_popcount(shifted & image2_mask[j]);
-                }
+                    overlap += __builtin_popcount(shifted & image2_mask[nr]);
 
-                ans = max(ans, overlap);
+                    ans = max(ans, overlap);
+                }
             }
         }
-
         return ans;
     }
 };
