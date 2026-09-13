@@ -1,5 +1,33 @@
 class Solution {
 public:
+    int countOverlaps(vector<vector<int>>& img1, vector<vector<int>>& img2,
+                      int row_offset, int col_offset) {
+        int n = img1.size(), overlap = 0;
+        for (int row = 0; row < n; row++) {
+            for (int col = 0; col < n; col++) {
+                int nr = row + row_offset;
+                int nc = col + col_offset;
+                if (nr < 0 || nc < 0 || nr >= n || nc >= n) {
+                    continue;
+                }
+                overlap += img1[nr][nc] && img2[row][col];
+            }
+        }
+        return overlap;
+    }
+    int largestOverlap(vector<vector<int>>& img1, vector<vector<int>>& img2) {
+        int n = img1.size(), max_overlaps = 0;
+        for (int row_offset = -n + 1; row_offset <= n - 1; row_offset++) {
+            for (int col_offset = -n + 1; col_offset <= n - 1; col_offset++) {
+                // calculate overlaps
+                int overlaps =
+                    countOverlaps(img1, img2, row_offset, col_offset);
+                max_overlaps = max(max_overlaps, overlaps);
+            }
+        }
+        return max_overlaps;
+    }
+    /*
     int largestOverlap(vector<vector<int>>& img1, vector<vector<int>>& img2) {
         int n = img1.size();
         vector<int> image1_mask(n), image2_mask(n);
@@ -40,4 +68,5 @@ public:
         }
         return ans;
     }
+    */
 };
