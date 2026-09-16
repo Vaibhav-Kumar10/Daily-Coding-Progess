@@ -22,7 +22,9 @@ public:
                  vector<int>& next_intervals, int n,
                  vector<vector<Score_Node>>& dp) {
         if (ind == n || k == 0) {
-            return Score_Node();
+            Score_Node base;
+            base.score = 0;
+            return base;
         }
         if (dp[ind][k].score != -1) {
             return dp[ind][k];
@@ -59,14 +61,6 @@ public:
         for (int i = 0; i < n; i++) {
             int cur_end = intervals[i][1];
             next_intervals[i] = findNext(cur_end, intervals, n);
-            /*
-            for (int j = i + 1; j < n; j++) {
-                if (intervals[j][0] > cur_end) {
-                    next_intervals[i] = j;
-                    break;
-                }
-            }
-            */
         }
         vector<vector<Score_Node>> dp(n + 1, vector<Score_Node>(5));
         int ind = 0, k = 4;
