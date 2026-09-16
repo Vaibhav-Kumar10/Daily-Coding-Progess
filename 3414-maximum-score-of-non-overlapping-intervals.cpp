@@ -1,48 +1,76 @@
 class Solution {
 public:
-    vector<int> maximumWeight(vector<vector<int>>& intervals) {
-        int n = intervals.size();
-        vector<tuple<int, int, int, int>> arr;
-        for (int i = 0; i < n; i++) {
-            int l = intervals[i][0], r = intervals[i][1],
-                weight = intervals[i][2];
-            arr.emplace_back(l, r, weight, i);
-        }
-        // Sort by right endpoint.
-        sort(arr.begin(), arr.end(),
-             [](auto&& a, auto&& b) { return get<1>(a) < get<1>(b); });
-
-        vector<vector<long long>> dp(n + 1, vector<long long>(5));
-        vector<vector<vector<int>>> indices(n + 1, vector<vector<int>>(5));
-        for (int i = 0; i < n; i++) {
-            auto [l, r, weight, idx] = arr[i];
-            // Use binary search to find intervals whose right endpoints are
-            // smaller than l.
-            int k = lower_bound(arr.begin(), arr.begin() + i, l,
-                                [](const tuple<int, int, int, int>& t,
-                                   int val) { return get<1>(t) < val; }) -
-                    arr.begin();
-
-            for (int j = 1; j < 5; j++) {
-                long long s1 = dp[i][j];
-                long long s2 = dp[k][j - 1] + weight;
-                if (s1 > s2) {
-                    dp[i + 1][j] = dp[i][j];
-                    indices[i + 1][j] = indices[i][j];
-                    continue;
-                }
-
-                vector<int> newIndex = indices[k][j - 1];
-                newIndex.push_back(idx);
-                sort(newIndex.begin(), newIndex.end());
-                if (s1 == s2 && indices[i][j] < newIndex) {
-                    newIndex = indices[i][j];
-                }
-                dp[i + 1][j] = s2;
-                indices[i + 1][j] = newIndex;
+    class Score_Node {
+    public:
+        long long score = -1;
+        vector<int> indices_taken;
+    };
+    int findNext(int endpoint, vector<vector<int>>& intervals, int n) {
+        int low = 0, high = n - 1, ans = n;
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            if (intervals[mid][0] > endpoint) {
+                ans = mid;
+                high = mid - 1;
+            } else {
+                low = mid + 1;
             }
         }
+        return ans;
+    }
+    Score_Node f(int ind, int k, vector<vector<int>>& intervals,
+                 vector<int>& next_intervals, int n,
+                 vector<vector<Score_Node>>& dp) {
+        if (ind == n || k == 0) {
+            return Score_Node();
+        }
+        if (dp[ind][k].score != -1) {
+            return dp[ind][k];
+        }
+        // skip cur interval
+        Score_Node skip = f(ind + 1, k, intervals, next_intervals, n, dp);
 
-        return indices[n][4];
+        // take cur interval
+        int original_index = intervals[ind][3];
+        int next_idx = next_intervals[ind];
+        Score_Node take = f(next_idx, k - 1, intervals, next_intervals, n, dp);
+
+        take.score = intervals[ind][2] + take.score;
+        take.indices_taken.push_back(original_index);
+        sort(begin(take.indices_taken), end(take.indices_taken));
+
+        Score_Node max_ans;
+        if (skip.score > take.score) {
+            max_ans = skip;
+        } else if (skip.score < take.score) {
+            max_ans = take;
+        } else {
+            max_ans = skip.indices_taken < take.indices_taken ? skip : take;
+        }
+        return dp[ind][k] = max_ans;
+    }
+    vector<int> maximumWeight(vector<vector<int>>& intervals) {
+        int n = intervals.size();
+        for (int i = 0; i < n; i++) {
+            intervals[i].push_back(i);
+        }
+        vector<int> next_intervals(n);
+        sort(intervals.begin(), intervals.end());
+        for (int i = 0; i < n; i++) {
+            int cur_end = intervals[i][1];
+            next_intervals[i] = findNext(cur_end, intervals, n);
+            /*
+            for (int j = i + 1; j < n; j++) {
+                if (intervals[j][0] > cur_end) {
+                    next_intervals[i] = j;
+                    break;
+                }
+            }
+            */
+        }
+        vector<vector<Score_Node>> dp(n + 1, vector<Score_Node>(5));
+        int ind = 0, k = 4;
+        Score_Node ans_node = f(ind, k, intervals, next_intervals, n, dp);
+        return ans_node.indices_taken;
     }
 };
