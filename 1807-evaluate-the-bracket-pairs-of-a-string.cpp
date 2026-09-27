@@ -2,28 +2,32 @@ class Solution {
 public:
     string evaluate(string s, vector<vector<string>>& knowledge) {
         unordered_map<string, string> dict;
-        for (auto& kd : knowledge) {
-            dict[kd[0]] = kd[1];
+        // store the knowledge as dictionary
+        for (auto kp : knowledge) {
+            string key = kp[0], value = kp[1];
+            dict[key] = value;
         }
-        bool addKey = false;
-        string key, res;
-        for (char c : s) {
-            if (c == '(') {
-                addKey = true;
-            } else if (c == ')') {
-                if (dict.count(key) > 0) {
-                    res += dict[key];
+        bool key_start = false;
+        string ans = "", word = "";
+        for (char ch : s) {
+            if (ch == '(') {
+                key_start = true;
+                word = "";
+            } else if (ch == ')') {
+                key_start = false;
+                if (dict.find(word) != dict.end()) {
+                    ans += dict[word];
                 } else {
-                    res.push_back('?');
+                    ans += '?';
                 }
-                addKey = false;
-                key.clear();
-            } else if (addKey) {
-                key.push_back(c);
             } else {
-                res.push_back(c);
+                if (key_start) {
+                    word += ch;
+                } else {
+                    ans += ch;
+                }
             }
         }
-        return res;
+        return ans;
     }
 };
