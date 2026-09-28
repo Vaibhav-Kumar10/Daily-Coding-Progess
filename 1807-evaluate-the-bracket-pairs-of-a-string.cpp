@@ -10,10 +10,13 @@ public:
         bool key_start = false;
         string ans = "", word = "";
         for (char ch : s) {
+            // start the key word
             if (ch == '(') {
                 key_start = true;
                 word = "";
-            } else if (ch == ')') {
+            }
+            // end the key word and get the corresponding value
+            else if (ch == ')') {
                 key_start = false;
                 if (dict.find(word) != dict.end()) {
                     ans += dict[word];
