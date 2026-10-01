@@ -4,12 +4,14 @@ public:
         stack<int> st;
         string ans = "";
         for (char ch : s) {
+            // push the length of the string,
+            // that we need to skip when reversing
             if (ch == '(') {
-                st.push(ans.length());
+                st.push(ans.size());
             } else if (ch == ')') {
-                int idx = st.top();
+                int skip_length = st.top();
                 st.pop();
-                reverse(ans.begin() + idx, ans.end());
+                reverse(ans.begin() + skip_length, ans.end());
             } else {
                 ans += ch;
             }
