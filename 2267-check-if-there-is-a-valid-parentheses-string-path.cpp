@@ -1,43 +1,45 @@
 class Solution {
 public:
     bool hasValidPath(vector<vector<char>>& grid) {
-        const int n = grid.size();
-        const int m = grid[0].size();
-        const int pathLen = n + m - 1;
-
-        if (pathLen % 2 == 1) {
+        int n = grid.size(), m = grid[0].size(), len = n + m - 1;
+        ;
+        if (grid[0][0] == ')' || grid[n - 1][m - 1] == '(') {
             return false;
         }
-        if (grid[0][0] != '(' || grid[n - 1][m - 1] != ')') {
-            return false;
-        }
-
-        vector<vector<bitset<201>>> dp(n, vector<bitset<201>>(m));
-
-        dp[0][0].set(1);
-
-        for (int i = 0; i < n; ++i) {
-            for (int j = 0; j < m; ++j) {
-                const int change = grid[i][j] == '(' ? 1 : -1;
-
-                if (i > 0) {
-                    if (change == 1) {
-                        dp[i][j] |= dp[i - 1][j] << 1;
-                    } else {
-                        dp[i][j] |= dp[i - 1][j] >> 1;
-                    }
+        vector<int> dr = {0, 1}, dc = {1, 0};
+        vector<vector<vector<bool>>> visited(
+            n, vector<vector<bool>>(m, vector<bool>(len + 1, false)));
+        queue<tuple<int, int, int>> q;
+        q.push({0, 0, 1});
+        visited[0][0][1] = true;
+        while (!q.empty()) {
+            auto [row, col, cnt] = q.front();
+            q.pop();
+            if (cnt < 0) {
+                continue;
+            }
+            if (row == n - 1 && col == m - 1) {
+                if (cnt == 0) {
+                    return true;
                 }
-
-                if (j > 0) {
-                    if (change == 1) {
-                        dp[i][j] |= dp[i][j - 1] << 1;
-                    } else {
-                        dp[i][j] |= dp[i][j - 1] >> 1;
-                    }
+                continue;
+            }
+            for (int i = 0; i < 2; i++) {
+                int nr = row + dr[i], nc = col + dc[i];
+                if (nr >= n || nc >= m) {
+                    continue;
                 }
+                int newCnt = cnt + (grid[nr][nc] == '(' ? 1 : -1);
+                if (newCnt < 0) {
+                    continue;
+                }
+                if (visited[nr][nc][newCnt]) {
+                    continue;
+                }
+                visited[nr][nc][newCnt] = true;
+                q.push({nr, nc, newCnt});
             }
         }
-
-        return dp[n - 1][m - 1].test(0);
+        return false;
     }
 };
