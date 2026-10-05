@@ -2,8 +2,7 @@ class Solution {
 public:
     bool hasValidPath(vector<vector<char>>& grid) {
         int n = grid.size(), m = grid[0].size(), len = n + m - 1;
-        ;
-        if (grid[0][0] == ')' || grid[n - 1][m - 1] == '(') {
+        if (grid[0][0] == ')' || grid[n - 1][m - 1] == '(' || len % 2 == 1) {
             return false;
         }
         vector<int> dr = {0, 1}, dc = {1, 0};
