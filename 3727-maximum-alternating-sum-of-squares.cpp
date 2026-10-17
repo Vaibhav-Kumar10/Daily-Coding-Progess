@@ -11,9 +11,12 @@ public:
         long long ans = 0;
         int n = squares.size();
         for (int i = 0; i < n; i++) {
+            // add first half elements
             if (i < (n + 1) / 2) {
                 ans += squares[i];
-            } else {
+            }
+            // subtract second half elements
+            else {
                 ans -= squares[i];
             }
         }
