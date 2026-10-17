@@ -12,11 +12,11 @@ public:
     int minSwaps(vector<int>& nums) {
         unordered_map<int, int> index;
         int n = nums.size();
-        vector<int> arr = nums;
+        vector<int> sorted = nums;
         for (int i = 0; i < n; i++) {
             index[nums[i]] = i;
         }
-        sort(arr.begin(), arr.end(), [&](const int& a, const int& b) {
+        sort(sorted.begin(), sorted.end(), [&](const int& a, const int& b) {
             int dig_sum_a = findDigitSum(a), dig_sum_b = findDigitSum(b);
             if (dig_sum_a != dig_sum_b) {
                 return dig_sum_a < dig_sum_b;
@@ -26,13 +26,13 @@ public:
         int swaps = 0;
         for (int i = 0; i < n; i++) {
             // wrong pos in nums
-            if (arr[i] != nums[i]) {
+            if (sorted[i] != nums[i]) {
                 // idx of corrrect num at i
-                int idx = index[arr[i]];
+                int idx = index[sorted[i]];
 
                 // update the index
                 index[nums[i]] = idx;
-                index[arr[i]] = i;
+                index[sorted[i]] = i;
 
                 // update the nums
                 swap(nums[i], nums[idx]);
