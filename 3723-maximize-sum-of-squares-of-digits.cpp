@@ -4,15 +4,13 @@ public:
         if (sum > 9 * num) {
             return "";
         }
-
-        string ans = "";
-
-        while (num-- > 0) {
-            int digit = min(9, sum);
-            ans += char('0' + digit);
-            sum -= digit;
+        int nines = sum / 9, rem = sum % 9;
+        string ans(nines, '9');
+        if (rem > 0) {
+            ans.push_back(rem + '0');
         }
-
-        return sum == 0 ? ans : "";
+        int left = num - ans.length();
+        ans.append(left, '0');
+        return ans;
     }
 };
