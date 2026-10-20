@@ -1,7 +1,6 @@
 class Solution {
 public:
     vector<int> targetIndices(vector<int>& nums, int target) {
-        sort(begin(nums), end(nums));
         vector<int> ans;
         int n = nums.size(), equal_cnt = 0, less_cnt = 0;
         for (int i = 0; i < n; i++) {
